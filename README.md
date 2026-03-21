@@ -1,107 +1,177 @@
 # DevOps-Containerised-Web-App
-A containerised web application project showcasing DevOps workflows, Docker-based deployment, and automated CI/CD pipelines.
 
-This project demonstrates how to build and run a multi-container backend application using Docker.
-The application uses a Flask API, PostgreSQL database, and an Nginx reverse proxy, all orchestrated using Docker Compose.
+A containerised web application project showcasing DevOps workflows, Docker-based deployment, and multi-container architecture using Docker Compose.
 
-The goal of this project is to understand containerization, service orchestration, and container networking in a DevOps workflow.
+---
 
+## Project Overview
 
-Architecture
+This project demonstrates how to build and run a backend system using:
 
-The system follows a simple backend architecture:
+- Flask API (Python)
+- PostgreSQL Database
+- Nginx Reverse Proxy
+- Docker & Docker Compose
 
-User
- │
- ▼
-Nginx (Reverse Proxy)
- │
- ▼
-Flask API (Python)
- │
- ▼
-PostgreSQL Database
+The focus is on:
+- Containerization
+- Service orchestration
+- Container networking
+- Data persistence using volumes
 
-Request Flow
-	1.	User sends a request to the server
-	2.	Nginx receives the request
-	3.	Nginx forwards the request to the Flask API
-	4.	Flask processes the request
-	5.	Flask communicates with PostgreSQL if database data is required
-	6.	Response is returned to the user
+---
 
-Tech Stack
-	•	Python (Flask)
-	•	PostgreSQL
-	•	Nginx
-	•	Docker
-	•	Docker Compose
+## Architecture
 
-Project Structur
+User  
+↓  
+Nginx (Reverse Proxy)  
+↓  
+Flask API  
+↓  
+PostgreSQL Database  
+
+---
+
+## Request Flow
+
+1. User sends request to server  
+2. Nginx receives request  
+3. Nginx forwards request to Flask  
+4. Flask processes request  
+5. Flask connects to PostgreSQL  
+6. Response is returned  
+
+---
+
+## Tech Stack
+
+- Python (Flask)
+- PostgreSQL
+- Nginx
+- Docker
+- Docker Compose
+
+---
+
+## Project Structure
 
 devops-containerised-web-app
-│
-├── app
-│   ├── app.py
-│   └── requirements.txt
-│
-├── nginx
-│   └── default.conf
-│
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
 
-Containers
+├── app  
+│   ├── app.py  
+│   └── requirements.txt  
 
-The project runs three containers:
-	•	nginx_proxy → Reverse proxy server
-	•	flask_app → Backend API service
-	•	postgres_db → PostgreSQL database
+├── nginx  
+│   └── default.conf  
 
-Check running containers:
+├── Dockerfile  
+├── docker-compose.yml  
+└── README.md  
 
-Bash
+---
+
+## Containers
+
+- nginx_proxy → Reverse proxy  
+- flask_app → Backend API  
+- postgres_db → Database  
+
+---
+
+## How to Run
+
+Start:
+docker compose up -d
+
+Stop:
+docker compose down
+
+Check running:
 docker ps
 
-API Endpoints
+---
 
-Root Endpoint
+## API Endpoints
+
 GET /
+→ DevOps Project Running by Nitin Raut
 
-Response: DevOps Project Running by Nitin Raut
-
-Health Check
 GET /health
+→ Service is healthy
 
-Health Check: Service is healthy
-
-Database Test
-Bash
 GET /db
+→ Returns PostgreSQL version
 
-This endpoint connects to PostgreSQL and returns the database version.
+---
 
-Example response: PostgreSQL version: PostgreSQL 18.x
+## Data Persistence (NEW)
 
-What This Project Demonstrates
-	•	Containerizing applications using Docker
-	•	Running multi-container systems with Docker Compose
-	•	Reverse proxy architecture using Nginx
-	•	Container-to-container networking
-	•	Connecting a backend service to a database
+This project uses Docker volumes:
 
-Future Improvements
+postgres_data → /var/lib/postgresql/data
 
-Possible improvements for this project:
-	•	Persistent database storage using Docker volumes
-	•	Container health checks
-	•	Logging and monitoring
-	•	CI/CD pipeline using GitHub Actions
-	•	Load balancing with multiple API containers
+Why this is important:
+- Data is not lost after container stop
+- Database survives restart
+- Real-world production behavior
 
+---
 
-Author
+## Persistence Test (What we did)
 
-Nitin Raut
+1. Start containers:
+docker compose up -d
+
+2. Test DB:
+curl http://localhost:8080/db
+
+3. Stop:
+docker compose down
+
+4. Start again:
+docker compose up -d
+
+5. Test again:
+curl http://localhost:8080/db
+
+Result:
+Database still works → Data persisted
+
+---
+
+## Networking
+
+- Flask connects to DB using:
+DB_HOST=db
+
+- Nginx forwards to:
+http://app:5000
+
+---
+
+## What This Project Demonstrates
+
+- Docker containerization  
+- Multi-container setup  
+- Nginx reverse proxy  
+- Service communication  
+- PostgreSQL integration  
+- Persistent storage using volumes  
+
+---
+
+## Future Improvements
+
+- Add health checks  
+- Use Gunicorn (production server)  
+- Add logging & monitoring  
+- CI/CD with GitHub Actions  
+- Load balancing  
+
+---
+
+## Author
+
+Nitin Raut  
 DevOps Learning Project
