@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-DB_HOST = os.getenv("DB_HOST")
+DB_HOST = os.getenv("DB_HOST", "db")
 
 @app.route("/")
 def home():
@@ -16,22 +16,25 @@ def health():
 
 @app.route("/db")
 def db_test():
-    conn = psycopg2.connect(
-        host=DB_HOST,
-        database="devopsdb",
-        user="devops",
-        password="devops"
-    )
+    try:
+        conn = psycopg2.connect(
+            host=DB_HOST,
+            database="devopsdb",
+            user="devops",
+            password="devops"
+        )
 
-    cur = conn.cursor()
-    cur.execute("SELECT version();")
+        cur = conn.cursor()
+        cur.execute("SELECT version();")
+        db_version = cur.fetchone()
 
-    db_version = cur.fetchone()
+        cur.close()
+        conn.close()
 
-    cur.close()
-    conn.close()
+        return f"PostgreSQL version: {db_version[0]}"
 
-    return f"PostgreSQL version: {db_version}"
+    except Exception as e:
+        return f"Database connection failed: {e}"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
